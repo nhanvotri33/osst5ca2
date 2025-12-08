@@ -1,0 +1,41 @@
+name: Deploy to Somee via FTP
+
+on:
+  # Kích hoạt workflow khi có push lên branch chính (thay 'main' bằng tên branch của bạn)
+  push:
+    branches:
+      - main
+  # Kích hoạt workflow bằng tay từ giao diện GitHub Actions
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    # Chọn hệ điều hành để chạy job
+    runs-on: ubuntu-latest
+
+    steps:
+      # Bước 1: Checkout mã nguồn
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+
+      # Bước 4: Deploy bằng FTP
+      - name: FTP Deploy to Somee
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+
+          local-dir: './' 
+          
+          # Địa chỉ máy chủ FTP của Somee.com
+          ftp-server: ${{ secrets.FTP_HOST }}   
+          # Tên người dùng FTP (thường là username của bạn trên Somee)
+          ftp-username: ${{ secrets.FTP_USERNAME }}        
+          # Mật khẩu FTP
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          
+          ftp-server-dir: '/' 
+          
+          # Tùy chọn: Xóa các file cũ trên server mà không có trong thư mục local-dir.
+          # Cần CÂN NHẮC kỹ trước khi bật. Chỉ nên bật nếu bạn chắc chắn muốn đồng bộ hóa hoàn toàn.
+          # Mặc định là 'false'
+          # dangerous-clean-script: 'true'
