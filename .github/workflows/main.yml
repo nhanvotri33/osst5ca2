@@ -1,4 +1,4 @@
-name: Deploy to Somee via FTP
+name: Deploy Website via FTP to Somee
 
 on:
   push:
@@ -20,7 +20,10 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
 
-          server-dir: /wwwroot/ # FIXED
+          # Thư mục gốc FTP (Somee yêu cầu upload vào đúng path này!)
+          server-dir: /www.nhanvt.somee.com/
+
+          # Thư mục cần upload (repo của bạn)
           local-dir: ./
 
           protocol: ftp
