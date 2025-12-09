@@ -1,33 +1,36 @@
-name: Deploy to Somee via FTP
+name: Deploy Website via FTP to Somee
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
-  deploy:
+  ftp-deploy:
+    name: FTP Deploy
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - name: Checkout source code
+        uses: actions/checkout@v3
 
-      # BƯỚC NÀY ĐÃ ĐƯỢC SỬA LỖI TÊN BIẾN
-      - name: FTP Deploy to Somee
+      - name: Deploy to FTP Server (Somee)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          local-dir: "./"
-
-          # ĐÃ SỬA: Thay thế 'ftp-server' bằng 'server'
           server: ${{ secrets.FTP_HOST }}
-
-          # ĐÃ SỬA: Thay thế 'ftp-username' bằng 'username'
           username: ${{ secrets.FTP_USERNAME }}
-
-          # ĐÃ SỬA: Thay thế 'ftp-password' bằng 'password'
           password: ${{ secrets.FTP_PASSWORD }}
 
-          # ĐÃ SỬA: Thay thế 'ftp-server-dir' bằng 'server-dir'
-          server-dir: "/"
+          # Thư mục upload lên hosting
+          local-dir: ./
+
+          # Thư mục gốc trên hosting (Somee thường là /)
+          server-dir: /
+
+          # Bật SSL và Passive mode cho FTP của Somee
+          protocol: ftp
+          port: 21
+          passive: true
+
+          # Đồng bộ hóa file, xóa file cũ không còn tồn tại
+          dangerous-clean-slate: false
