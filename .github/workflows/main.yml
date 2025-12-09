@@ -6,31 +6,25 @@ on:
       - main
 
 jobs:
-  ftp-deploy:
-    name: FTP Deploy
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy to FTP Server (Somee)
+      - name: Deploy via FTP to Somee
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
 
-          # Thư mục upload lên hosting
+          # Thư mục gốc FTP (Somee yêu cầu upload vào đúng path này!)
+          server-dir: /www.nhanvt.somee.com/
+
+          # Thư mục cần upload (repo của bạn)
           local-dir: ./
 
-          # Thư mục gốc trên hosting (Somee thường là /)
-          server-dir: /
-
-          # Bật SSL và Passive mode cho FTP của Somee
           protocol: ftp
           port: 21
-          passive: true
-
-          # Đồng bộ hóa file, xóa file cũ không còn tồn tại
-          dangerous-clean-slate: false
